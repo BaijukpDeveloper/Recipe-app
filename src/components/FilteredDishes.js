@@ -73,7 +73,7 @@ function FilteredDishes(props) {
 
     // show only single dishes
     const maxItem = 4;
-    const singleDishItems = singleDish.filter((_, index) => index < maxItem).map((item, index) => {
+    const singleDishItems = singleDish.filter((_, i) => i < maxItem).map((item, index) => {
         return (
             <li key={index} className='small'>
                         <img src={item.strMealThumb} className="br-10" alt="ph" />
