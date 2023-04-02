@@ -44,25 +44,31 @@ function FilteredDishes(props) {
 
 
     // get all the category list
-    async function getAllTheCategories() {
+    async function getAllTheCategories(abortController) {
       const API_URl = "https://www.themealdb.com/api/json/v1/1/categories.php";
-      let response = await fetch(API_URl);
+        let response = await fetch(API_URl, { signal: abortController.signal });
       let categoryData = await response.json();
       setMenuCategory(categoryData.categories);
     }
   
     // fetch category wised food meals by calling an Api
-    async function getOnlyOneDish() {
+    async function getOnlyOneDish(abortController) {
       const API_URl = "https://www.themealdb.com/api/json/v1/1/filter.php?c=dessert";
-      let response = await fetch(API_URl);
+        let response = await fetch(API_URl, { signal: abortController.signal });
       let singleDishData = await response.json();    
       setSingleDish(singleDishData.meals)
     }
   
     // useeffect hoooks
     useEffect(() => { 
-      getAllTheCategories();
-      getOnlyOneDish();
+        const categoriesAbortController = new AbortController();
+        const dishesAbortController = new AbortController();
+        getAllTheCategories(categoriesAbortController);
+        getOnlyOneDish(dishesAbortController);
+        return () => {
+            categoriesAbortController.abort();
+            dishesAbortController.abort();
+        };
     }, []);
 
     // show only single dishes

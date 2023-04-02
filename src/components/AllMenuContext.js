@@ -17,10 +17,10 @@ export const AllMenus =(props)=>{
 
 
   // Get all the menus item from themealdb api fetch data from api 
-  async function getAllTheMenus() {
+  async function getAllTheMenus(abortController) {
     setLoading(true);
     const API_URl = "https://www.themealdb.com/api/json/v1/1/search.php?f=a";
-    let response = await fetch(API_URl);
+    let response = await fetch(API_URl, {signal: abortController.signal});
     let data = await response.json();
     setMenu(data.meals);
     setLoading(false);
@@ -28,8 +28,9 @@ export const AllMenus =(props)=>{
   
    // useeffect hoooks
    useEffect(() => {
-    getAllTheMenus();
-    
+    const abortController = new AbortController()
+    getAllTheMenus(abortController);
+    return () => abortController.abort()
   }, []);
     return(
       // rendring context menu
