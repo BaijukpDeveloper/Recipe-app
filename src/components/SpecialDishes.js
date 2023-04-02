@@ -56,16 +56,13 @@ function SpecialDishes(props){
 
 
     // set a maximum dishs to show on the page
-    let maxSpecialDishes = 8 ;
+    const maxSpecialDishes = 8 ;
 
-    let specialMenus = allMenus.map((menuItem, index) => {
-        if(index < maxSpecialDishes){
+    const specialMenus = allMenus.filter((_, i) => i < maxSpecialDishes).map((menuItem, index) => {
             return(
-                <CardDish menuItem={menuItem}
+                <CardDish key={index} menuItem={menuItem}
                     showPopUp={showPopupHandler}/>
-            )
-        }
-        
+            ) 
     })
     return(
         <section className="special-dishes">

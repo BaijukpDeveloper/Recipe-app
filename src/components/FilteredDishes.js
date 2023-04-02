@@ -44,59 +44,63 @@ function FilteredDishes(props) {
 
 
     // get all the category list
-    async function getAllTheCategories() {
+    async function getAllTheCategories(abortController) {
       const API_URl = "https://www.themealdb.com/api/json/v1/1/categories.php";
-      let response = await fetch(API_URl);
+        let response = await fetch(API_URl, { signal: abortController.signal });
       let categoryData = await response.json();
       setMenuCategory(categoryData.categories);
     }
   
     // fetch category wised food meals by calling an Api
-    async function getOnlyOneDish() {
+    async function getOnlyOneDish(abortController) {
       const API_URl = "https://www.themealdb.com/api/json/v1/1/filter.php?c=dessert";
-      let response = await fetch(API_URl);
+        let response = await fetch(API_URl, { signal: abortController.signal });
       let singleDishData = await response.json();    
       setSingleDish(singleDishData.meals)
     }
   
     // useeffect hoooks
     useEffect(() => { 
-      getAllTheCategories();
-      getOnlyOneDish();
+        const categoriesAbortController = new AbortController();
+        const dishesAbortController = new AbortController();
+        getAllTheCategories(categoriesAbortController);
+        getOnlyOneDish(dishesAbortController);
+        return () => {
+            categoriesAbortController.abort();
+            dishesAbortController.abort();
+        };
     }, []);
 
     // show only single dishes
-    let maxItem = 4;
-    let singleDishItems = singleDish.map((item, index) => {
-        if(index < maxItem){
-            return(
-                <li className='small'>
+    const maxItem = 4;
+    const singleDishItems = singleDish.filter((_, i) => i < maxItem).map((item, index) => {
+        return (
+            <li key={index} className='small'>
                         <img src={item.strMealThumb} className="br-10" alt="ph" />
                         <h6>{item.strMeal}</h6>
                 </li>
             )
-        }
       
     })
 
     // show category wised dishes on click
-    function showFilterdDishesHandler(category){
+    function showFilterdDishesHandler(category) {
         setSingleDish([])
         setActiveDish(category)
-        let filteredDishesAre = allMenus.filter((item)=>{
+        let filteredDishesAre = allMenus.filter((item) => {
             return item.strCategory === category
-        }).map((menuItem)=>{
-            return(
-                <CardDish menuItem={menuItem}/>
+        }).map((menuItem, index) => {
+            return (
+                <CardDish key={index} menuItem={menuItem} />
             )
         })
         setFilteredDishes(filteredDishesAre)
     }
     
    // shpw the all categories
-   let allCategories = menuCategory.map((item) => {
-      return(
-        <li className={item.strCategory === activeDish ? "active" : ""} onClick={()=>{showFilterdDishesHandler(item.strCategory)}}>{item.strCategory}</li>
+    let allCategories = menuCategory.map((item, index) => {
+        return (
+            <li key={index} className={item.strCategory === activeDish ? "active" : ""} onClick={() => { showFilterdDishesHandler(item.strCategory) }}>{item.strCategory}</li>
       )
    })
   return (
