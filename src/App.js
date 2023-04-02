@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+// importing menu component from component its the main component
+import Menus from './components/Menus';
+
+// importinf css file
 import './App.css';
+
+// importing checkout component
+import Checkout from "./components/Checkout";
+
+// importing header section from component
+import Header from "./components/Header";
+
+// importing basic routing components form react-router-dom library
+import {Routes, Route} from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App"> 
+     {/*rendring  header comonet  */}
+    <Header />
+    {/* set basci routing  */}
+    <Routes>
+      {/* set the routing path */}
+      <Route path="/" element={<Menus/>} />
+      <Route path="checkout" element={<Checkout/>} />  
+    </Routes> 
     </div>
   );
 }
