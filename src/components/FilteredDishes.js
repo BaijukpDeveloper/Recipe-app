@@ -84,23 +84,23 @@ function FilteredDishes(props) {
     })
 
     // show category wised dishes on click
-    function showFilterdDishesHandler(category){
+    function showFilterdDishesHandler(category) {
         setSingleDish([])
         setActiveDish(category)
-        let filteredDishesAre = allMenus.filter((item)=>{
+        let filteredDishesAre = allMenus.filter((item) => {
             return item.strCategory === category
-        }).map((menuItem)=>{
-            return(
-                <CardDish menuItem={menuItem}/>
+        }).map((menuItem, index) => {
+            return (
+                <CardDish key={index} menuItem={menuItem} />
             )
         })
         setFilteredDishes(filteredDishesAre)
     }
     
    // shpw the all categories
-   let allCategories = menuCategory.map((item) => {
-      return(
-        <li className={item.strCategory === activeDish ? "active" : ""} onClick={()=>{showFilterdDishesHandler(item.strCategory)}}>{item.strCategory}</li>
+    let allCategories = menuCategory.map((item, index) => {
+        return (
+            <li key={index} className={item.strCategory === activeDish ? "active" : ""} onClick={() => { showFilterdDishesHandler(item.strCategory) }}>{item.strCategory}</li>
       )
    })
   return (
